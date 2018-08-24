@@ -52,6 +52,10 @@ enum custom_keycodes {
 #define KC_HRKT HRKT
 #define KC_CLEQ CLEQ
 
+// mac tab nav
+#define KC_TBLF LGUI(KC_LBRC)
+#define KC_TBRT LGUI(KC_RBRC)
+
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -87,7 +91,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
      GRAV,EXLM, AT ,HASH,DLR ,PERC,               CIRC,AMPR,ASTR,LPRN,RPRN,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,    ,    ,    ,    ,LCBR,               RCBR,    ,    ,    ,    ,    ,
+         ,    ,    ,    ,    ,LCBR,               RCBR,    ,    ,TBLF,TBRT,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,HOME, UP ,END ,PGUP,LBRC,               RBRC,MINS,EQL , UP ,    ,BSLS,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
