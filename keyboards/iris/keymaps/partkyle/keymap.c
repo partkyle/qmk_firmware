@@ -1,7 +1,7 @@
 #include "iris.h"
 #include "action_layer.h"
 #include "eeconfig.h"
-
+#include <print.h>
 extern keymap_config_t keymap_config;
 
 enum layers {
@@ -67,11 +67,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      LCTL, A  , S  , D  , F  , G  ,                H  , J  , K  , L  ,SCLN,QUOT,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     LSFT, Z  , X  , C  , V  , B  ,LALT,     RGUI, N  , M  ,COMM,DOT ,SLSH,SENT,
+     LSFT, Z  , X  , C  , V  , B  ,LALT,     BSPC, N  , M  ,COMM,DOT ,SLSH,SENT,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                        LGUI,LOWR,SPC ,         SPC ,RASE,RALT
   //                  `----+----+----'        `----+----+----'
   ),
+  
 
   [_GAMING] = LAYOUT_kc(
   //,----+----+----+----+----+----.              ,----+----+----+----+----+----.
@@ -95,7 +96,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
          ,HOME, UP ,END ,PGUP,LBRC,               RBRC,MINS,EQL , UP ,    ,BSLS,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-         ,LEFT,DOWN,RGHT,PGDN,LPRN,    ,         ,RPRN,    ,LEFT,DOWN,RGHT,    ,
+         ,LEFT,DOWN,RGHT,PGDN,LPRN,    ,     DEL ,RPRN,    ,LEFT,DOWN,RGHT,    ,
   //`----+----+----+----+----+----+----/    \----+----+----+----+----+----+----'
                            ,    ,    ,             ,    ,
   //                  `----+----+----'        `----+----+----'
@@ -121,9 +122,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
      RTOG,RMOD,RHUI,RSAI,RVAI,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----|              |----+----+----+----+----+----|
-         ,DBUG,RHUD,RSAD,RVAD,    ,                   ,GAME,QWER,    ,    ,    ,
+         ,DBUG,RHUD,RSAD,RVAD,    ,                   ,    ,    ,    ,    ,    ,
   //|----+----+----+----+----+----+----.    ,----|----+----+----+----+----+----|
-     BL_S,RST ,    ,    ,    ,    ,    ,         ,    ,    ,    ,    ,    ,    ,
+     BL_S,RST ,    ,    ,GAME,QWER,    ,         ,    ,    ,    ,    ,    ,    ,
   //`----+----+----+--+-+----+----+----/    \----+----+----+----+----+----+----'
                            ,    ,    ,             ,    ,
   //                  `----+----+----'        `----+----+----'
@@ -147,8 +148,34 @@ void unset_all_layer_modifiers(void) {
   layer_off(_ADJUST);
 }
 
+static bool ent_down = false;
+static bool bspc_down = false;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
+    case KC_ENT:
+      if (record->event.pressed) {
+        ent_down = true;
+      } else {
+        ent_down = false;
+      }
+      return true;
+      break;
+    case KC_BSPC:
+      if (record->event.pressed) {
+        bspc_down = true;
+      } else {
+        bspc_down = false;
+      }
+      return true;
+      break;
+    case KC_SPC:
+      if (record->event.pressed && (ent_down || bspc_down)) {
+        return false;
+      } else {
+        return true;
+      }
+      break;
     case QWERTY:
       if (record->event.pressed) {
         persistent_default_layer_set(1UL<<_QWERTY);
